@@ -1,0 +1,66 @@
+ public class AlbumService : IAlbumService
+    {
+        public IDataProvider _data = null;
+
+        public AlbumService(IDataProvider data)
+        {
+            _data = data;
+        }
+
+        public int Add(AlbumAddRequest model, int userId)
+        {
+            int id = 0;
+            string procName = "[dbo].[Albums_Insert]";
+            _data.ExecuteNonQuery(procName,
+                inputParamMapper: delegate (SqlParameterCollection col)
+                {
+                    AddCommonParams(model, col, userId);
+                    SqlParameter idOut = new SqlParameter("@Id", SqlDbType.Int);
+                    idOut.Direction = ParameterDirection.Output;
+                    col.Add(idOut);
+
+                }, returnParameters: delegate (SqlParameterCollection returnCollection)
+                {
+                    object oId = returnCollection["@Id"].Value;
+                    int.TryParse(oId.ToString(), out id);
+                });
+            return id;
+        }
+
+        public void Update(AlbumUpdateRequest model,int userId)
+        {
+            string procName = "[dbo].[Albums_Update]";
+            _data.ExecuteNonQuery(procName,
+                inputParamMapper: delegate (SqlParameterCollection col)
+                {
+                    AddCommonParams(model, col, userId);
+                    col.AddWithValue("@Id", model.Id);
+                }, returnParameters: null);
+        }
+
+        public void Delete(int id)
+        {
+            string procName = "[dbo].[Albums_Delete_ById]";
+            _data.ExecuteNonQuery(procName,
+            inputParamMapper: delegate (SqlParameterCollection col)
+            {
+                col.AddWithValue("@Id", id);
+            }, returnParameters: null);
+        }
+
+        public Album Get(int id)
+        {
+            string procName = "[dbo].[Albums_Select_ById]";
+            Album aAlbum = null;
+            _data.ExecuteCmd(procName,
+                inputParamMapper: delegate (SqlParameterCollection paramCollection)
+            {
+                paramCollection.AddWithValue("@Id", id);
+
+            }, singleRecordMapper: delegate (IDataReader reader, short set)
+            {
+                aAlbum = MapAlbum(reader, out int startingIndex);
+
+            });
+            return aAlbum;
+        }

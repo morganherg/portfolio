@@ -1,0 +1,47 @@
+import { SideMenuLeftClosed } from "./SideMenuLeftClosed";
+import { SideMenuLeftOpen } from "./SideMenuLeftOpen";
+import { ProjectList, TaskList } from "../../libs/interfaces";
+
+interface SideMenuLeftProps {
+  projects: ProjectList;
+  isOpen: boolean;
+  togglePanel: () => void;
+  countTaskForProject: (projectId: string) => Promise<number>;
+}
+
+export const SideMenuLeft = ({
+  projects,
+  isOpen,
+  togglePanel,
+  countTaskForProject,
+}: SideMenuLeftProps) => {
+  return (
+    <div style={{ display: "flex", height: "100vh" }}>
+      <div
+        className={`side-panel ${isOpen ? "open" : "closed"}`}
+        style={{
+          background: "#141718",
+          height: "100%",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          width: isOpen ? "489px" : "96px",
+          transition: "width 0.3s",
+        }}
+      >
+        {isOpen ? (
+          <SideMenuLeftOpen
+            toggleSidePanel={togglePanel}
+            projects={projects}
+            countTaskForProject={countTaskForProject}
+          />
+        ) : (
+          <SideMenuLeftClosed
+            toggleSidePanel={togglePanel}
+            projects={projects}
+          />
+        )}
+      </div>
+    </div>
+  );
+};

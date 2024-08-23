@@ -1,0 +1,36 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "name": "TypeBeat",
+      "description": "A digital production marketplace that allows music producers to sell and license beats."
+    },
+    {
+      "id": 2,
+      "name": "TypeBeat",
+      "description": "A digital production marketplace that allows music producers to sell and license beats."
+    }
+  ],
+  "react": [
+    {
+      "id": 101,
+      "projectId": 1,
+      "description": "Example of a Single Card to be mapped in another component",
+      "code": "import React from \"react\";\nimport PropTypes from \"prop-types\";\nimport { Card, CardContent, Link } from \"@material-ui/core\";\n\nAlbumSingle.propTypes = {\n  currentUser: PropTypes.shape({\n    avatar: PropTypes.string,\n    email: PropTypes.string,\n    userName: PropTypes.string,\n  }),\n  location: PropTypes.shape({\n    state: PropTypes.string,\n  }),\n  match: PropTypes.shape({\n    params: PropTypes.shape({\n      id: PropTypes.number,\n    }),\n  }),\n  albums: PropTypes.shape({\n    name: PropTypes.string,\n    id: PropTypes.number,\n    professionalName: PropTypes.string,\n    imageUrl: PropTypes.string,\n  }),\n  onClick: PropTypes.func,\n};\n\nexport default function AlbumSingle(props) {\n  const oneAlbum = props.albums;\n\n  const onError = (e) => {\n    e.target.onerror = null;\n    e.target.src =\n      \"https://demo.tutorialzine.com/2015/03/html5-music-player/assets/img/default.png\";\n  };\n\n  const onAlbumClick = () => {\n    props.onClick(oneAlbum);\n  };\n\n  return (\n    <Card\n      className=\"mb-4 mr-1\"\n      style={{\n        backgroundColor: \"transparent\",\n        boxShadow: \"none\",\n      }}\n    >\n      <img\n        alt=\"...\"\n        className=\"card-img-top\"\n        style={{ borderRadius: 10, aspectRatio: \"1/1\" }}\n        src={oneAlbum.imageUrl}\n        onError={onError}\n      />\n      <CardContent className=\"p-3\">\n        <Link\n          component=\"h5\"\n          className=\"card-title font-weight-bold font-size-lg\"\n          color=\"inherit\"\n          onClick={onAlbumClick}\n        >\n          {oneAlbum.name}\n        </Link>\n        <p className=\"card-text\">{oneAlbum.professionalName}</p>\n      </CardContent>\n    </Card>\n  );\n}"
+    }
+  ],
+  "dotnet": [
+    {
+      "id": 201,
+      "projectId": 1,
+      "description": "REST APIs for Album Service",
+      "code": "public class AlbumService : IAlbumService\n{\n    public IDataProvider _data = null;\n\n    public AlbumService(IDataProvider data)\n    {\n        _data = data;\n    }\n\n    public int Add(AlbumAddRequest model, int userId)\n    {\n        int id = 0;\n        string procName = \"[dbo].[Albums_Insert]\";\n        _data.ExecuteNonQuery(procName,\n            inputParamMapper: delegate (SqlParameterCollection col)\n            {\n                AddCommonParams(model, col, userId);\n                SqlParameter idOut = new SqlParameter(\"@Id\", SqlDbType.Int);\n                idOut.Direction = ParameterDirection.Output;\n                col.Add(idOut);\n\n            }, returnParameters: delegate (SqlParameterCollection returnCollection)\n            {\n                object oId = returnCollection[\"@Id\"].Value;\n                int.TryParse(oId.ToString(), out id);\n            });\n        return id;\n    }\n\n    public void Update(AlbumUpdateRequest model, int userId)\n    {\n        string procName = \"[dbo].[Albums_Update]\";\n        _data.ExecuteNonQuery(procName,\n            inputParamMapper: delegate (SqlParameterCollection col)\n            {\n                AddCommonParams(model, col, userId);\n                col.AddWithValue(\"@Id\", model.Id);\n            }, returnParameters: null);\n    }\n\n    public void Delete(int id)\n    {\n        string procName = \"[dbo].[Albums_Delete_ById]\";\n        _data.ExecuteNonQuery(procName,\n        inputParamMapper: delegate (SqlParameterCollection col)\n        {\n            col.AddWithValue(\"@Id\", id);\n        }, returnParameters: null);\n    }\n\n    public Album Get(int id)\n    {\n        string procName = \"[dbo].[Albums_Select_ById]\";\n        Album aAlbum = null;\n        _data.ExecuteCmd(procName,\n            inputParamMapper: delegate (SqlParameterCollection paramCollection)\n        {\n            paramCollection.AddWithValue(\"@Id\", id);\n\n        }, singleRecordMapper: delegate (IDataReader reader, short set)\n        {\n            aAlbum = MapAlbum(reader, out int startingIndex);\n\n        });\n        return aAlbum;\n    }\n}"
+    },
+    {
+      "id": 202,
+      "projectId": 1,
+      "description": "SendGrid to Send Email Notifications to Users",
+      "code": "public class EmailService : IEmailService\n{\n    private IWebHostEnvironment _env;\n    private AppKeys _appKeys;\n\n    public EmailService(IWebHostEnvironment env, IOptions<AppKeys> appKeys)\n    {\n        _env = env;\n        _appKeys = appKeys.Value;\n    }\n\n    public async void Add(EmailsAddRequest model)\n    {\n        var path = \"/EmailTemplate/Test.html\";\n        var filePath = _env.WebRootPath + path;\n        var htmlContent = System.IO.File.ReadAllText(filePath).Replace(\"{{&&message}}\", \"Welcome!\");\n        SendGridMessage message = new SendGridMessage()\n        {\n            From = new EmailAddress(\"devteam@gmail.com\", \"Dev Team\"),\n            Subject = model.Subject,\n            PlainTextContent = model.PlainTextContent,\n            HtmlContent = htmlContent\n        };\n        message.AddTo(model.To);\n        await Send(message);\n    }\n\n    private async Task Send(SendGridMessage message)\n    {\n        var client = new SendGridClient(_appKeys.SendGridAppKey);\n        await client.SendEmailAsync(message);\n    }\n}"
+    }
+  ]
+}

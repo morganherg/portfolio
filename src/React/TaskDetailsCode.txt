@@ -1,0 +1,192 @@
+"use client";
+import React from "react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { dracula as theme } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { FiExternalLink } from "react-icons/fi";
+import { useTaskStore } from "@/libs/taskStore";
+import { useRouteParams } from "@/libs/useRouteParams";
+import Image from "next/image";
+
+const TaskDetailsCode = () => {
+  const { projectId, taskId } = useRouteParams();
+
+  const { getTask } = useTaskStore();
+  const task = getTask(projectId, taskId);
+
+  function formatCodeWithPrefixes(codeString: string, language: string) {
+    return (
+      <SyntaxHighlighter
+        language={language}
+        style={theme}
+        showLineNumbers
+        customStyle={{
+          maxWidth: "100%",
+          overflow: "auto",
+        }}
+      >
+        {codeString}
+      </SyntaxHighlighter>
+    );
+  }
+
+  const checkForPOMTitle = (code: string) => {
+    const isTestModel = code.includes(".spec");
+    return (
+      <p
+        className="text-left"
+        style={{
+          paddingBottom: "10px",
+          color: "#1792EB",
+          fontFamily: "Roboto",
+          fontSize: "16px",
+          fontStyle: "normal",
+          fontWeight: 600,
+          lineHeight: "normal",
+          textTransform: "capitalize",
+        }}
+      >
+        {isTestModel ? "Test Model:" : "Object Model:"}
+      </p>
+    );
+  };
+
+  const checkForPOMCard = (code: string) => {
+    const isTestModel = code.includes(".spec");
+    return (
+      <div
+        className="card-body"
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "0",
+        }}
+      >
+        <p style={{ paddingLeft: "10px" }}>
+          {isTestModel ? "" : "I have created code in your Playwright account."}
+        </p>
+        <a href={task?.prUrl} target="_blank" rel="noopener noreferrer">
+          <button className="btn btn-primary" style={{ background: "#FEFEFE" }}>
+            {isTestModel ? "View" : "Debug"}
+            <FiExternalLink />
+          </button>
+        </a>
+      </div>
+    );
+  };
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
+        gap: "20px",
+        justifyContent: "center",
+      }}
+    >
+      {task?.files.map((file, index) => (
+        <div key={index} style={{ width: "100%" }}>
+          <div>{checkForPOMTitle(file.pathFromRoot)}</div>
+          <div
+            className="hero"
+            style={{
+              borderRadius: "20px",
+              background: "#141718",
+              padding: "24px 24px 64px 24px",
+              maxHeight: "100vh",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div
+              className="hero-content flex flex-col"
+              style={{ width: "100%" }}
+            >
+              <div
+                className="card"
+                style={{
+                  width: "100%",
+                  background: "rgba(35, 38, 39, 0.5)",
+                  borderRadius: "10px",
+                  maxHeight: "calc(50vh - 100px)", // Adjust this value as needed
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <div
+                  className="card-body"
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "0",
+                  }}
+                >
+                  <div style={{ margin: "10px" }}>
+                    <button
+                      className="btn btn-neutral"
+                      style={{ color: "white" }}
+                    >
+                      Javascript
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      className="btn btn-ghost"
+                      style={{ color: "white" }}
+                    >
+                      Copy Code
+                    </button>
+                  </div>
+                </div>
+                <div
+                  className="mockup-code"
+                  style={{ overflowY: "auto", flexGrow: 1 }}
+                >
+                  {formatCodeWithPrefixes(file.fileContent, "javascript")}
+                </div>
+              </div>
+              <div
+                className="card"
+                style={{
+                  width: "100%",
+                  background: "rgba(35, 38, 39, 0.5)",
+                  borderRadius: "10px",
+                }}
+              >
+                {checkForPOMCard(file.pathFromRoot)}
+              </div>
+            </div>
+          </div>
+          {!file.pathFromRoot.includes(".spec") && (
+            <div style={{ marginTop: "-35px", marginBottom: "15px" }}>
+              <div
+                className="avatar online placeholder"
+                style={{ marginRight: "15px" }}
+              >
+                <div
+                  className="bg-neutral text-neutral-content rounded-full"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                  }}
+                >
+                  <Image
+                    src="/Avatar2.png"
+                    alt="Nolan"
+                    width="60"
+                    height="60"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default TaskDetailsCode;

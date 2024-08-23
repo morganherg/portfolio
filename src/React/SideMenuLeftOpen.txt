@@ -1,0 +1,402 @@
+import Image from "next/image";
+import NextLink from "next/link";
+import { MouseEventHandler, useEffect, useState } from "react";
+import { BsChatText, BsFillPlusCircleFill } from "react-icons/bs";
+import { FaSquare } from "react-icons/fa";
+import { IoIosBarcode } from "react-icons/io";
+import { IoSettingsOutline } from "react-icons/io5";
+import { RiBankCardLine } from "react-icons/ri";
+import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
+import { ProjectList } from "../../libs/interfaces";
+
+interface SideMenuLeftOpenProps {
+  toggleSidePanel: MouseEventHandler<SVGElement> | undefined;
+  projects: ProjectList;
+  countTaskForProject: (projectId: string) => Promise<number>;
+}
+
+const TaskCount = ({
+  projectId,
+  countTaskForProject,
+}: {
+  projectId: string;
+  countTaskForProject: (projectId: string) => Promise<number>;
+}) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCount = async () => {
+      const result = await countTaskForProject(projectId);
+      setCount(result);
+    };
+    fetchCount();
+  }, [projectId, countTaskForProject]);
+
+  return <>{count}</>;
+};
+
+export const SideMenuLeftOpen = ({
+  toggleSidePanel,
+  projects,
+  countTaskForProject,
+}: SideMenuLeftOpenProps) => {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          width: "489px",
+          height: "100vh",
+          padding: "38px",
+          boxSizing: "border-box",
+        }}
+      >
+        <div
+          className="header"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            margin: "15px",
+          }}
+        >
+          <Image
+            src="/Logo.png"
+            alt="Logo"
+            width="320"
+            height="689"
+            style={{ marginRight: "15px" }}
+          />
+          <TbLayoutSidebarLeftCollapse
+            onClick={toggleSidePanel}
+            style={{
+              width: "30px",
+              height: "30px",
+              color: "rgba(189, 227, 255, 1)",
+              cursor: "pointer",
+            }}
+          />
+        </div>
+        <div
+          className="content"
+          style={{
+            alignItems: "left",
+            flexGrow: 1,
+            paddingTop: "40px",
+            overflowY: "auto",
+          }}
+        >
+          <ul
+            className="menu"
+            style={{ listStyleType: "none", padding: 0, margin: 0 }}
+          >
+            <li>
+              <NextLink href="/dashboard">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    margin: "12px 0",
+                  }}
+                >
+                  <BsChatText
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      marginRight: "15px",
+                      color: "#BDE3FF",
+                    }}
+                  />
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "var(--neutral-0375, rgba(232, 236, 239, 0.75))",
+                      fontFamily: "Roboto",
+                      fontSize: "14px",
+                      fontStyle: "normal",
+                      fontWeight: 600,
+                      lineHeight: "24px",
+                      letterSpacing: "-0.28px",
+                    }}
+                  >
+                    Dashboard
+                  </p>
+                </div>
+              </NextLink>
+            </li>
+            <li>
+              <NextLink href="">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    margin: "12px 0",
+                  }}
+                >
+                  <RiBankCardLine
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      marginRight: "15px",
+                      color: "#BDE3FF",
+                    }}
+                  />
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "var(--neutral-0375, rgba(232, 236, 239, 0.75))",
+                      fontFamily: "Roboto",
+                      fontSize: "14px",
+                      fontStyle: "normal",
+                      fontWeight: 600,
+                      lineHeight: "24px",
+                      letterSpacing: "-0.28px",
+                    }}
+                  >
+                    My Team
+                  </p>
+                </div>
+              </NextLink>
+            </li>
+            <li>
+              <NextLink href="">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    margin: "12px 0",
+                  }}
+                >
+                  <IoIosBarcode
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      marginRight: "15px",
+                      color: "#BDE3FF",
+                    }}
+                  />
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "var(--neutral-0375, rgba(232, 236, 239, 0.75))",
+                      fontFamily: "Roboto",
+                      fontSize: "14px",
+                      fontStyle: "normal",
+                      fontWeight: 600,
+                      lineHeight: "24px",
+                      letterSpacing: "-0.28px",
+                    }}
+                  >
+                    Integrations
+                  </p>
+                </div>
+              </NextLink>
+            </li>
+            <li>
+              <NextLink href="">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    margin: "12px 0",
+                  }}
+                >
+                  <IoSettingsOutline
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      marginRight: "15px",
+                      color: "#BDE3FF",
+                    }}
+                  />
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "var(--neutral-0375, rgba(232, 236, 239, 0.75))",
+                      fontFamily: "Roboto",
+                      fontSize: "14px",
+                      fontStyle: "normal",
+                      fontWeight: 600,
+                      lineHeight: "24px",
+                      letterSpacing: "-0.28px",
+                    }}
+                  >
+                    Settings
+                  </p>
+                </div>
+              </NextLink>
+            </li>
+          </ul>
+          <div
+            className="divider"
+            style={{
+              height: "24px",
+              cursor: "pointer",
+              margin: "12px 0",
+            }}
+          ></div>
+          <div className="collapse collapse-arrow ">
+            <input type="checkbox" defaultChecked />
+            <div className="collapse-title text-xl font-medium">
+              My Projects
+            </div>
+            <div className="collapse-content" style={{ marginTop: "14px" }}>
+              <ul
+                className="menu"
+                style={{ listStyleType: "none", padding: 0, margin: 0 }}
+              >
+                {projects.projects.map((project, index) => (
+                  <li key={project.id}>
+                    <NextLink href={`/project/${project.id}`}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          cursor: "pointer",
+                          margin: "12px 0",
+                        }}
+                      >
+                        <FaSquare
+                          style={{
+                            width: "24px",
+                            height: "24px",
+                            marginRight: "15px",
+                            color:
+                              index % 3 === 0
+                                ? "rgba(108, 114, 117, 0.5)"
+                                : index % 3 === 1
+                                ? "rgba(142, 85, 234, 1)"
+                                : "rgba(62, 144, 240, 1)",
+                          }}
+                        />
+                        <p
+                          style={{
+                            margin: 0,
+                            color:
+                              "var(--neutral-0375, rgba(232, 236, 239, 0.75))",
+                            fontFamily: "Roboto",
+                            fontSize: "14px",
+                            fontStyle: "normal",
+                            fontWeight: 600,
+                            lineHeight: "24px",
+                            letterSpacing: "-0.28px",
+                          }}
+                        >
+                          {project.name}
+                        </p>
+                      </div>
+                      <div className="badge badge-neutral">
+                        <TaskCount
+                          projectId={project.id}
+                          countTaskForProject={countTaskForProject}
+                        />
+                      </div>
+                    </NextLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <ul
+            className="menu"
+            style={{ listStyleType: "none", padding: 0, margin: 0 }}
+          >
+            <li>
+              <NextLink href="">
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    margin: "12px 0",
+                  }}
+                >
+                  <BsFillPlusCircleFill
+                    style={{
+                      width: "24px",
+                      height: "24px",
+                      marginRight: "15px",
+                    }}
+                  />
+                  <p style={{ margin: 0, fontSize: "14px" }}>
+                    Create New Project
+                  </p>
+                </div>
+              </NextLink>
+            </li>
+          </ul>
+        </div>
+        <div
+          className="content-footer"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            width: "100%",
+
+            boxSizing: "border-box",
+          }}
+        >
+          <NextLink href="/api/auth/signin">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                width: "100%",
+                margin: "0 0 16px 24px",
+              }}
+            >
+              <div className="avatar online placeholder">
+                <div
+                  className="bg-neutral text-neutral-content w-40 rounded-full"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                  }}
+                >
+                  <Image
+                    src="/Avatar1.jpg"
+                    alt="Nolan"
+                    width="60"
+                    height="60"
+                  />
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexGrow: 1,
+                  marginLeft: "15px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "4px",
+                  }}
+                >
+                  <p style={{ margin: 0, marginRight: "10px" }}>Jane Doe</p>
+                  <div
+                    className="badge"
+                    style={{ background: "#0D99FF", color: "white" }}
+                  >
+                    Free
+                  </div>
+                </div>
+                <p style={{ margin: 0 }}>jane@provokesolutions.com</p>
+              </div>
+            </div>
+          </NextLink>
+        </div>
+      </div>
+    </div>
+  );
+};

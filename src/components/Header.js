@@ -9,7 +9,7 @@ function Header() {
           <h3 className="font-bold text-lg">Morgan Herg's Portfolio</h3>
         </div>
         <div className="flex-none">
-          <div class="tooltip tooltip-left" data-tip="About Morgan">
+          <div className="tooltip tooltip-left" data-tip="About Morgan">
             <button
               className="btn btn-square btn-ghost"
               onClick={() => document.getElementById("my_modal_1").showModal()}

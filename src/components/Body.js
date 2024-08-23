@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../App.css";
 
 // Import your components
@@ -11,6 +12,30 @@ import TestingComponent from "./CodePages/TestingComponent";
 
 function Body() {
   const [selectedComponent, setSelectedComponent] = useState(null);
+  const [project, setProject] = useState([]);
+
+  useEffect(() => {
+    console.log("effect");
+    axios.get("http://localhost:3001/projects").then((response) => {
+      console.log("promise fulfilled");
+      setProject(response.data);
+    });
+  }, []);
+
+  // Array of button color classes to cycle through
+  const colorClasses = ["btn-primary", "btn-secondary", "btn-accent"];
+
+  // Array of button details (label and corresponding component key)
+  const buttons = [
+    { label: "HTML", component: "HTML" },
+    { label: "React", component: "React" },
+    { label: "Angular", component: "Angular", disabled: true },
+    { label: "Python", component: "Python", disabled: true },
+    { label: "C#/.Net", component: "DotNet" },
+    { label: "SQL", component: "SQL", disabled: true },
+    { label: "Testing", component: "Testing", disabled: true },
+    // Add more buttons here if needed
+  ];
 
   const renderComponent = () => {
     switch (selectedComponent) {
@@ -21,13 +46,17 @@ function Body() {
       case "Python":
         return <PythonComponent />;
       case "DotNet":
-        return <DotNetComponent />;
+        return <DotNetComponent projects={project} />;
       case "HTML":
-        return <HTMLComponent />;
+        return <HTMLComponent projects={project} />;
       case "Testing":
         return <TestingComponent />;
       default:
-        return <p>Select a button to see the code sample</p>;
+        return (
+          <p style={{ textAlign: "center" }}>
+            Select a button to see the code sample
+          </p>
+        );
     }
   };
 
@@ -41,47 +70,27 @@ function Body() {
           gap: "8px",
         }}
       >
-        <button
-          className="btn btn-active btn-primary"
-          onClick={() => setSelectedComponent("React")}
-        >
-          React
-        </button>
-        <button
-          className="btn btn-active btn-secondary"
-          disabled="disabled"
-          onClick={() => setSelectedComponent("Angular")}
-        >
-          Angular
-        </button>
-        <button
-          className="btn btn-active btn-accent"
-          disabled="disabled"
-          onClick={() => setSelectedComponent("Python")}
-        >
-          Python
-        </button>
-        <button
-          className="btn btn-active btn-primary"
-          onClick={() => setSelectedComponent("DotNet")}
-        >
-          C#/.Net
-        </button>
-        <button
-          className="btn btn-active btn-secondary"
-          onClick={() => setSelectedComponent("HTML")}
-        >
-          HTML
-        </button>
-        <button
-          className="btn btn-active btn-accent"
-          disabled="disabled"
-          onClick={() => setSelectedComponent("Testing")}
-        >
-          Testing
-        </button>
+        {buttons.map((btn, index) => (
+          <button
+            key={index}
+            className={`btn btn-active ${
+              colorClasses[index % colorClasses.length]
+            }`}
+            onClick={() => setSelectedComponent(btn.component)}
+            disabled={btn.disabled || false}
+          >
+            {btn.label}
+          </button>
+        ))}
       </div>
-      <div style={{ marginTop: "16px" }}>{renderComponent()}</div>
+      <div
+        style={{
+          margin: "16px 100px",
+        
+        }}
+      >
+        {renderComponent()}
+      </div>
     </div>
   );
 }

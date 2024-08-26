@@ -40,7 +40,7 @@ function Body() {
   const renderComponent = () => {
     switch (selectedComponent) {
       case "React":
-        return <ReactComponent />;
+        return <ReactComponent projects={project} />;
       case "Angular":
         return <AngularComponent />;
       case "Python":
@@ -86,7 +86,6 @@ function Body() {
       <div
         style={{
           margin: "16px 100px",
-        
         }}
       >
         {renderComponent()}

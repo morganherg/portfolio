@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "../App.css";
 
 // Import your components
@@ -9,6 +8,7 @@ import PythonComponent from "./CodePages/PythonComponent";
 import DotNetComponent from "./CodePages/DotNetComponent";
 import HTMLComponent from "./CodePages/HTMLComponent";
 import TestingComponent from "./CodePages/TestingComponent";
+import service from "../services";
 
 function Body() {
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -16,9 +16,9 @@ function Body() {
 
   useEffect(() => {
     console.log("effect");
-    axios.get("http://localhost:3001/projects").then((response) => {
+    service.getProjects().then((response) => {
       console.log("promise fulfilled");
-      setProject(response.data);
+      setProject(response);
     });
   }, []);
 

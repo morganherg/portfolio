@@ -1,13 +1,13 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
+import service from "../../services";
 
 function ReactComponent({ projects }) {
   const [react, setReact] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/react").then((response) => {
-      setReact(response.data);
+    service.getReact().then((response) => {
+      setReact(response);
     });
   }, []);
 

@@ -1,14 +1,14 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
+import service from "../../services";
 
 function DotNetComponent({ projects }) {
   const [dotNet, setDotNet] = useState([]);
 
   useEffect(() => {
     console.log("effect");
-    axios.get("http://localhost:3001/dotnet").then((response) => {
+    service.getDotNet().then((response) => {
       console.log("promise fulfilled");
-      setDotNet(response.data);
+      setDotNet(response);
     });
   }, []);
 

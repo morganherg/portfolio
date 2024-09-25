@@ -1,14 +1,14 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
+import service from "../../services";
 
 function HTMLComponent({ projects }) {
   const [html, setHtml] = useState([]);
 
   useEffect(() => {
     console.log("effect");
-    axios.get("http://localhost:3001/html").then((response) => {
+    service.getHtml().then((response) => {
       console.log("promise fulfilled");
-      setHtml(response.data);
+      setHtml(response);
     });
   }, []);
 

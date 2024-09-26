@@ -54,7 +54,7 @@ function DotNetComponent({ projects }) {
             <div
               className="mockup-code"
               style={{
-                height: "65vh",
+                maxHeight: "65vh",
                 overflowY: "auto",
                 whiteSpace: "pre",
               }}

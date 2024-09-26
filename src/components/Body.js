@@ -7,6 +7,8 @@ import PythonComponent from "./CodePages/PythonComponent";
 import DotNetComponent from "./CodePages/DotNetComponent";
 import HTMLComponent from "./CodePages/HTMLComponent";
 import TestingComponent from "./CodePages/TestingComponent";
+import SqlComponent from "./CodePages/SqlComponent";
+import MongoDBComponent from "./CodePages/MongoDbComponent";
 import service from "../services";
 
 function Body() {
@@ -30,6 +32,7 @@ function Body() {
     { label: "Python", component: "Python", disabled: true },
     { label: "C#/.Net", component: "DotNet" },
     { label: "SQL", component: "SQL", disabled: true },
+    { label: "MongoDB", component: "MongoDB" },
     { label: "Testing", component: "Testing", disabled: true },
   ];
 
@@ -47,6 +50,10 @@ function Body() {
         return <HTMLComponent projects={project} />;
       case "Testing":
         return <TestingComponent />;
+      case "SQL":
+        return <SqlComponent />;
+      case "MongoDB":
+        return <MongoDBComponent projects={project}/>;
       default:
         return (
           <p style={{ textAlign: "center" }}>

@@ -73,7 +73,7 @@ function ReactComponent({ projects }) {
             <p>{data.description}</p>
             <div
               className="mockup-code"
-              style={{ height: "65vh", overflowY: "auto", overflowX: "auto" }}
+              style={{ maxHeight: "65vh", overflowY: "auto", overflowX: "auto" }}
             >
               {data.code.split("\n").map((line, index) => (
                 <pre key={index} data-prefix={index + 1}>

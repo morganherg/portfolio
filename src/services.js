@@ -3,38 +3,52 @@ import axios from "axios";
 const baseUrl = "http://localhost:3001";
 
 const getProjects = () => {
-  return axios.get(`${baseUrl}/projects`)
+  return axios
+    .get(`${baseUrl}/projects`)
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error fetching projects:", error);
-      return [];  
+      return [];
     });
 };
 
 const getHtml = () => {
-  return axios.get(`${baseUrl}/html`)
+  return axios
+    .get(`${baseUrl}/html`)
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error fetching HTML data:", error);
-      return [];  
+      return [];
     });
 };
 
 const getReact = () => {
-  return axios.get(`${baseUrl}/react`)
+  return axios
+    .get(`${baseUrl}/react`)
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error fetching React data:", error);
-      return [];  
+      return [];
     });
 };
 
 const getDotNet = () => {
-  return axios.get(`${baseUrl}/dotnet`)
+  return axios
+    .get(`${baseUrl}/dotnet`)
     .then((response) => response.data)
     .catch((error) => {
       console.error("Error fetching .NET data:", error);
-      return [];  
+      return [];
+    });
+};
+
+const getMongoDb = () => {
+  return axios
+    .get(`${baseUrl}/mongodb`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error fetching MongoDB data:", error);
+      return [];
     });
 };
 
@@ -43,6 +57,7 @@ const api = {
   getHtml,
   getReact,
   getDotNet,
+  getMongoDb,
 };
 
 export default api;

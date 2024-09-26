@@ -31,9 +31,9 @@ function DotNetComponent({ projects }) {
       <div
         style={{
           display: "flex",
-          flexDirection: "row", // Align items in a row
-          flexWrap: "wrap", // Wrap items to the next line if needed
-          gap: "16px", // Space between items
+          flexDirection: "row",
+          flexWrap: "wrap",
+          gap: "16px",
           justifyContent: "center",
         }}
       >
@@ -56,7 +56,7 @@ function DotNetComponent({ projects }) {
               style={{
                 height: "65vh",
                 overflowY: "auto",
-                whiteSpace: "pre", // Ensure preformatted text stays intact
+                whiteSpace: "pre",
               }}
             >
               {data.code.split("\n").map((line, index) => (

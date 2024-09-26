@@ -3,38 +3,38 @@ import axios from "axios";
 const baseUrl = "http://localhost:3001";
 
 const getProjects = () => {
-  const request = axios.get(`${baseUrl}/projects`);
-  return request
+  return axios.get(`${baseUrl}/projects`)
     .then((response) => response.data)
     .catch((error) => {
-      console.log("fail", error);
+      console.error("Error fetching projects:", error);
+      return [];  
     });
 };
 
 const getHtml = () => {
-  const request = axios.get(`${baseUrl}/html`);
-  return request
+  return axios.get(`${baseUrl}/html`)
     .then((response) => response.data)
     .catch((error) => {
-      console.log("fail", error);
+      console.error("Error fetching HTML data:", error);
+      return [];  
     });
 };
 
 const getReact = () => {
-  const request = axios.get(`${baseUrl}/react`);
-  return request
+  return axios.get(`${baseUrl}/react`)
     .then((response) => response.data)
     .catch((error) => {
-      console.log("fail", error);
+      console.error("Error fetching React data:", error);
+      return [];  
     });
 };
 
 const getDotNet = () => {
-  const request = axios.get(`${baseUrl}/dotnet`);
-  return request
+  return axios.get(`${baseUrl}/dotnet`)
     .then((response) => response.data)
     .catch((error) => {
-      console.log("fail", error);
+      console.error("Error fetching .NET data:", error);
+      return [];  
     });
 };
 

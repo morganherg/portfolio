@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 
-// Import your components
 import ReactComponent from "./CodePages/ReactComponent";
 import AngularComponent from "./CodePages/AngularComponent";
 import PythonComponent from "./CodePages/PythonComponent";
@@ -22,10 +21,8 @@ function Body() {
     });
   }, []);
 
-  // Array of button color classes to cycle through
   const colorClasses = ["btn-primary", "btn-secondary", "btn-accent"];
 
-  // Array of button details (label and corresponding component key)
   const buttons = [
     { label: "HTML", component: "HTML" },
     { label: "React", component: "React" },
@@ -34,7 +31,6 @@ function Body() {
     { label: "C#/.Net", component: "DotNet" },
     { label: "SQL", component: "SQL", disabled: true },
     { label: "Testing", component: "Testing", disabled: true },
-    // Add more buttons here if needed
   ];
 
   const renderComponent = () => {

@@ -31,7 +31,7 @@ function Body() {
     { label: "Angular", component: "Angular", disabled: true },
     { label: "Python", component: "Python", disabled: true },
     { label: "C#/.Net", component: "DotNet" },
-    { label: "SQL", component: "SQL", disabled: true },
+    { label: "SQL/PostgreSQL", component: "SQL" },
     { label: "MongoDB", component: "MongoDB" },
     { label: "Testing", component: "Testing", disabled: true },
   ];
@@ -51,9 +51,9 @@ function Body() {
       case "Testing":
         return <TestingComponent />;
       case "SQL":
-        return <SqlComponent />;
+        return <SqlComponent projects={project} />;
       case "MongoDB":
-        return <MongoDBComponent projects={project}/>;
+        return <MongoDBComponent projects={project} />;
       default:
         return (
           <p style={{ textAlign: "center" }}>

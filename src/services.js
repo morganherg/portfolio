@@ -52,12 +52,23 @@ const getMongoDb = () => {
     });
 };
 
+const getSql = () => {
+  return axios
+    .get(`${baseUrl}/sql`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error("Error fetching Sql/PostgreSQL data:", error);
+      return [];
+    });
+}
+
 const api = {
   getProjects,
   getHtml,
   getReact,
   getDotNet,
   getMongoDb,
+  getSql,
 };
 
 export default api;

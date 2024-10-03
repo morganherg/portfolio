@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import supabase from "../config/supabaseClient";
 import "../App.css";
 
 import ReactComponent from "./CodePages/ReactComponent";
@@ -9,51 +10,67 @@ import HTMLComponent from "./CodePages/HTMLComponent";
 import TestingComponent from "./CodePages/TestingComponent";
 import SqlComponent from "./CodePages/SqlComponent";
 import MongoDBComponent from "./CodePages/MongoDbComponent";
-import service from "../services";
 
 function Body() {
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [project, setProject] = useState([]);
+  const [codeLang, setCodeLang] = useState([]);
+  const [selectedLangId, setSelectedLangId] = useState(null); // New state to hold the selected language Id
 
   useEffect(() => {
-    console.log("effect");
-    service.getProjects().then((response) => {
-      console.log("promise fulfilled");
-      setProject(response);
-    });
+    const getProjects = async () => {
+      const { data, error } = await supabase.from("projects").select();
+      if (error) {
+        console.error("Supabase error:", error);
+        setProject([]);
+      } else {
+        setProject(data);
+      }
+    };
+
+    const getCodingLanguage = async () => {
+      const { data, error } = await supabase.from("codingLanguage").select();
+      if (error) {
+        console.error("Supabase error:", error);
+        setCodeLang([]);
+      } else {
+        const sortedData = data.sort((a, b) => {
+          const tierOrder = { Frontend: 1, "Middle/Backend": 2, Backend: 3 };
+          const tierA = tierOrder[a.Tier] || 4;
+          const tierB = tierOrder[b.Tier] || 4;
+
+          if (tierA === tierB) {
+            return a.langName.localeCompare(b.langName);
+          }
+          return tierA - tierB;
+        });
+        setCodeLang(sortedData);
+      }
+    };
+
+    getProjects();
+    getCodingLanguage();
   }, []);
 
-  const colorClasses = ["btn-primary", "btn-secondary", "btn-accent"];
-
-  const buttons = [
-    { label: "HTML", component: "HTML" },
-    { label: "React", component: "React" },
-    { label: "Angular", component: "Angular", disabled: true },
-    { label: "Python", component: "Python", disabled: true },
-    { label: "C#/.Net", component: "DotNet" },
-    { label: "SQL/PostgreSQL", component: "SQL" },
-    { label: "MongoDB", component: "MongoDB" },
-    { label: "Testing", component: "Testing", disabled: true },
-  ];
-
+  // Updated renderComponent function to pass the selected language Id as a prop
   const renderComponent = () => {
     switch (selectedComponent) {
       case "React":
-        return <ReactComponent projects={project} />;
+        return <ReactComponent projects={project} langId={selectedLangId} />;
       case "Angular":
-        return <AngularComponent />;
+        return <AngularComponent langId={selectedLangId} />;
       case "Python":
-        return <PythonComponent />;
-      case "DotNet":
-        return <DotNetComponent projects={project} />;
+        return <PythonComponent langId={selectedLangId} />;
+      case "C#/.Net":
+        return <DotNetComponent projects={project} langId={selectedLangId} />;
       case "HTML":
-        return <HTMLComponent projects={project} />;
+        return <HTMLComponent projects={project} langId={selectedLangId} />;
       case "Testing":
-        return <TestingComponent />;
-      case "SQL":
-        return <SqlComponent projects={project} />;
+        return <TestingComponent langId={selectedLangId} />;
+      case "SQL/PostgreSQL":
+        return <SqlComponent projects={project} langId={selectedLangId} />;
       case "MongoDB":
-        return <MongoDBComponent projects={project} />;
+        return <MongoDBComponent projects={project} langId={selectedLangId} />;
       default:
         return (
           <p style={{ textAlign: "center" }}>
@@ -62,6 +79,8 @@ function Body() {
         );
     }
   };
+
+  const colorClasses = ["btn-primary", "btn-secondary", "btn-accent"];
 
   return (
     <div className="App-Body">
@@ -73,16 +92,19 @@ function Body() {
           gap: "8px",
         }}
       >
-        {buttons.map((btn, index) => (
+        {codeLang.map((lang, index) => (
           <button
             key={index}
             className={`btn btn-active ${
               colorClasses[index % colorClasses.length]
             }`}
-            onClick={() => setSelectedComponent(btn.component)}
-            disabled={btn.disabled || false}
+            onClick={() => {
+              setSelectedComponent(lang.langName);
+              setSelectedLangId(lang.id); // Set the selected language id
+            }}
+            disabled={!lang.isActive} // Disable button if isActive is false
           >
-            {btn.label}
+            {lang.langName}
           </button>
         ))}
       </div>

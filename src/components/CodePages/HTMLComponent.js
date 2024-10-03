@@ -1,16 +1,28 @@
 import { useState, useEffect } from "react";
-import service from "../../services";
+import supabase from "../../config/supabaseClient";
 
-function HTMLComponent({ projects }) {
+
+function HTMLComponent({ projects, langId }) {
   const [html, setHtml] = useState([]);
 
   useEffect(() => {
     console.log("effect");
-    service.getHtml().then((response) => {
-      console.log("promise fulfilled");
-      setHtml(response);
-    });
-  }, []);
+    const fetchHtml = async () => {
+      const { data, error } = await supabase
+        .from("codeSamples")
+        .select()
+        .eq("codeId", langId);
+      if (error) {
+        console.error("Supabase error:", error);
+        setHtml([]);
+      }
+      if (data) {
+        console.log("dotNet data:", data);
+        setHtml(data);
+      }
+    };
+    fetchHtml();
+  }, [langId]);
 
   const getProjectName = (id) => {
     const numericId = Number(id);
@@ -55,7 +67,7 @@ function HTMLComponent({ projects }) {
               className="mockup-code"
               style={{ maxHeight: "65vh", overflowY: "auto" }}
             >
-              {data.code.split("\n").map((line, index) => (
+              {data.code.split("\\n").map((line, index) => (
                 <pre key={index} data-prefix={index + 1}>
                   <code>{line}</code>
                 </pre>

@@ -1,24 +1,35 @@
 import { useState, useEffect } from "react";
-import service from "../../services";
+import supabase from "../../config/supabaseClient";
 
-function MongoDBComponent({ projects }) {
+function MongoDBComponent({ projects, langId }) {
   const [mongoDb, setMongoDb] = useState([]);
 
   useEffect(() => {
     console.log("effect");
-    service.getMongoDb().then((response) => {
-      console.log("promise fulfilled");
-      setMongoDb(response);
-    });
-  }, []);
+    const fetchMongoDb = async () => {
+      const { data, error } = await supabase
+        .from("codeSamples")
+        .select()
+        .eq("codeId", langId);
+      if (error) {
+        console.error("Supabase error:", error);
+        setMongoDb([]);
+      }
+      if (data) {
+        console.log("dotNet data:", data);
+        setMongoDb(data);
+      }
+    };
+    fetchMongoDb();
+  }, [langId]);
 
-  const getProjectName = (id) => {
-    const numericId = Number(id);
-    const project = projects.find(
-      (project) => Number(project.id) === numericId
-    );
-    return project ? project.name : "Unknown Project";
-  };
+  // const getProjectName = (id) => {
+  //   const numericId = Number(id);
+  //   const project = projects.find(
+  //     (project) => Number(project.id) === numericId
+  //   );
+  //   return project ? project.name : "Unknown Project";
+  // };
 
   return (
     <div className="body-mongoDb">
@@ -54,7 +65,7 @@ function MongoDBComponent({ projects }) {
                 whiteSpace: "pre",
               }}
             >
-              {data.code.split("\n").map((line, index) => (
+              {data.code.split("\\n").map((line, index) => (
                 <pre key={index} data-prefix={index + 1}>
                   <code>{line}</code>
                 </pre>

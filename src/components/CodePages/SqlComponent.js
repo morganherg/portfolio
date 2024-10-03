@@ -1,24 +1,36 @@
 import { useState, useEffect } from "react";
-import service from "../../services";
+import supabase from "../../config/supabaseClient";
 
-function SqlComponent({ projects }) {
+
+function SqlComponent({ projects, langId }) {
   const [sql, setSql] = useState([]);
 
   useEffect(() => {
     console.log("effect");
-    service.getSql().then((response) => {
-      console.log("promise fulfilled");
-      setSql(response);
-    });
-  }, []);
+    const fetchSql = async () => {
+      const { data, error } = await supabase
+        .from("codeSamples")
+        .select()
+        .eq("codeId", langId);
+      if (error) {
+        console.error("Supabase error:", error);
+        setSql([]);
+      }
+      if (data) {
+        console.log("dotNet data:", data);
+        setSql(data);
+      }
+    };
+    fetchSql();
+  }, [langId]);
 
-  const getProjectName = (id) => {
-    const numericId = Number(id);
-    const project = projects.find(
-      (project) => Number(project.id) === numericId
-    );
-    return project ? project.name : "Unknown Project";
-  };
+  // const getProjectName = (id) => {
+  //   const numericId = Number(id);
+  //   const project = projects.find(
+  //     (project) => Number(project.id) === numericId
+  //   );
+  //   return project ? project.name : "Unknown Project";
+  // };
 
   return (
     <div className="body-sql">
@@ -54,7 +66,7 @@ function SqlComponent({ projects }) {
                 whiteSpace: "pre",
               }}
             >
-              {data.code.split("\n").map((line, index) => (
+              {data.code.split("\\n").map((line, index) => (
                 <pre key={index} data-prefix={index + 1}>
                   <code>{line}</code>
                 </pre>

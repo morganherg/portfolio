@@ -1,15 +1,27 @@
 import { useState, useEffect } from "react";
-import service from "../../services";
+import supabase from "../../config/supabaseClient";
 
-function ReactComponent({ projects }) {
+function ReactComponent({ projects, langId }) {
   const [react, setReact] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   useEffect(() => {
-    service.getReact().then((response) => {
-      setReact(response);
-    });
-  }, []);
+    const fetchReact = async () => {
+      const { data, error } = await supabase
+        .from("codeSamples")
+        .select()
+        .eq("codeId", langId);
+      if (error) {
+        console.error("Supabase error:", error);
+        setReact([]);
+      }
+      if (data) {
+        console.log("dotNet data:", data);
+        setReact(data);
+      }
+    };
+    fetchReact();
+  }, [langId]);
 
   const matchingProjects = projects.filter((project) =>
     react.some((r) => Number(r.projectId) === Number(project.id))
@@ -75,7 +87,7 @@ function ReactComponent({ projects }) {
               className="mockup-code"
               style={{ maxHeight: "65vh", overflowY: "auto", overflowX: "auto" }}
             >
-              {data.code.split("\n").map((line, index) => (
+              {data.code.split("\\n").map((line, index) => (
                 <pre key={index} data-prefix={index + 1}>
                   <code>{line}</code>
                 </pre>

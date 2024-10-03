@@ -5,7 +5,7 @@ Welcome to my portfolio! This project showcases samples of code I have worked on
 ### Technologies Used
 
 - Frontend: React JS and Daisy UI
-- Backend: JSON Server (for mock data)
+- Backend: Supabase
 
 ### How to Set Up the Project
 
@@ -23,14 +23,16 @@ Welcome to my portfolio! This project showcases samples of code I have worked on
 2. Install dependencies:
     ```bash
     npm install
+    npm install @supabase/supabase-js
     ```
 #### Running the Project
 
-1. To run the backend (mock API): 
+1. To run the backend (Supabase): 
+   set up Environment Variables in .env folder
     ```bash
-    npx json-server --watch db.json --port 3001
+    REACT_APP_SUPABASE_URL
+    REACT_APP_ANON_KEY
     ```
-    This will start the mock server on http://localhost:3001.
 
 2. To run the frontend:
     ```bash

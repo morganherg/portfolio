@@ -17,8 +17,8 @@ Welcome to my portfolio! This project showcases samples of code I have worked on
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/your-repo.git
-   cd your-repo
+   git clone [https://github.com/your-username/portfolio.git](https://github.com/your-username/portfolio.git)
+   cd portfolio
    ```
 2. Install dependencies:
     ```bash

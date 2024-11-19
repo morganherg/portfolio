@@ -1,26 +1,22 @@
 import { useState, useEffect } from "react";
-import supabase from "../../config/supabaseClient";
+import service from "../../services";
 
 function ReactComponent({ projects, langId }) {
   const [react, setReact] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   useEffect(() => {
-    const fetchReact = async () => {
-      const { data, error } = await supabase
-        .from("codeSamples")
-        .select()
-        .eq("codeId", langId);
-      if (error) {
-        console.error("Supabase error:", error);
+    const fetchCodeByLangId = async () => {
+      try {
+        const data = await service.getCodeSamplesByLangId(langId);
+        setReact(data);
+      } catch (error) {
+        console.error("Error fetching code samples:", error);
         setReact([]);
       }
-      if (data) {
-        console.log("dotNet data:", data);
-        setReact(data);
-      }
     };
-    fetchReact();
+
+    if (langId) fetchCodeByLangId();
   }, [langId]);
 
   const matchingProjects = projects.filter((project) =>
@@ -85,7 +81,11 @@ function ReactComponent({ projects, langId }) {
             <p>{data.description}</p>
             <div
               className="mockup-code"
-              style={{ maxHeight: "65vh", overflowY: "auto", overflowX: "auto" }}
+              style={{
+                maxHeight: "65vh",
+                overflowY: "auto",
+                overflowX: "auto",
+              }}
             >
               {data.code.split("\\n").map((line, index) => (
                 <pre key={index} data-prefix={index + 1}>

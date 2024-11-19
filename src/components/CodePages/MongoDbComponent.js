@@ -1,26 +1,21 @@
 import { useState, useEffect } from "react";
-import supabase from "../../config/supabaseClient";
+import service from "../../services";
 
 function MongoDBComponent({ projects, langId }) {
   const [mongoDb, setMongoDb] = useState([]);
 
   useEffect(() => {
-    console.log("effect");
-    const fetchMongoDb = async () => {
-      const { data, error } = await supabase
-        .from("codeSamples")
-        .select()
-        .eq("codeId", langId);
-      if (error) {
-        console.error("Supabase error:", error);
+    const fetchCodeByLangId = async () => {
+      try {
+        const data = await service.getCodeSamplesByLangId(langId);
+        setMongoDb(data);
+      } catch (error) {
+        console.error("Error fetching code samples:", error);
         setMongoDb([]);
       }
-      if (data) {
-        console.log("dotNet data:", data);
-        setMongoDb(data);
-      }
     };
-    fetchMongoDb();
+
+    if (langId) fetchCodeByLangId();
   }, [langId]);
 
   // const getProjectName = (id) => {

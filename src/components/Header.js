@@ -6,7 +6,12 @@ function Header() {
     <div className="App-Header">
       <div className="navbar bg-base-100">
         <div className="flex-1">
-          <h3 className="font-bold text-lg">Morgan Herg's Portfolio</h3>
+          <h3
+            className="font-bold text-lg"
+            style={{ fontSize: "30px", margin: "24px" }}
+          >
+            Morgan Herg's Portfolio
+          </h3>
         </div>
         <div className="flex-none">
           <div className="tooltip tooltip-left" data-tip="About Morgan">
@@ -29,10 +34,12 @@ function Header() {
           </form>
           <h3 className="font-bold text-lg">Morgan Herg</h3>
           <p className="py-4">
-            Based out of Houston Texas, I’m a Software Engineer comfortable in
-            React, Angular, SQL, AP.Net/C#, and API Design. I have experience
-            with start-ups and helping companies grow. And providing for my 5
-            parrots.
+            Based out of Houston Texas, I am a versatile Full-Stack Software
+            Engineer with expertise in React, Angular, .NET/C#, SQL, and API
+            design. I have a proven track record of driving growth and success
+            in startups and established companies through innovative
+            development, effective problem-solving, and a focus on delivering
+            high-quality software solutions. And providing for my 5 parrots.
           </p>
           <div className="modal-action">
             <div

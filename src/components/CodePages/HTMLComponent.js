@@ -1,27 +1,21 @@
 import { useState, useEffect } from "react";
-import supabase from "../../config/supabaseClient";
-
+import service from "../../services";
 
 function HTMLComponent({ projects, langId }) {
   const [html, setHtml] = useState([]);
 
   useEffect(() => {
-    console.log("effect");
-    const fetchHtml = async () => {
-      const { data, error } = await supabase
-        .from("codeSamples")
-        .select()
-        .eq("codeId", langId);
-      if (error) {
-        console.error("Supabase error:", error);
+    const fetchCodeByLangId = async () => {
+      try {
+        const data = await service.getCodeSamplesByLangId(langId);
+        setHtml(data);
+      } catch (error) {
+        console.error("Error fetching code samples:", error);
         setHtml([]);
       }
-      if (data) {
-        console.log("dotNet data:", data);
-        setHtml(data);
-      }
     };
-    fetchHtml();
+
+    if (langId) fetchCodeByLangId();
   }, [langId]);
 
   const getProjectName = (id) => {

@@ -1,26 +1,21 @@
 import { useState, useEffect } from "react";
-import supabase from "../../config/supabaseClient";
+import service from "../../services";
 
 function DotNetComponent({ projects, langId }) {
   const [dotNet, setDotNet] = useState([]);
 
   useEffect(() => {
-    console.log("effect");
-    const fetchDotNet = async () => {
-      const { data, error } = await supabase
-        .from("codeSamples")
-        .select()
-        .eq("codeId", langId);
-      if (error) {
-        console.error("Supabase error:", error);
+    const fetchCodeByLangId = async () => {
+      try {
+        const data = await service.getCodeSamplesByLangId(langId);
+        setDotNet(data);
+      } catch (error) {
+        console.error("Error fetching code samples:", error);
         setDotNet([]);
       }
-      if (data) {
-        console.log("dotNet data:", data);
-        setDotNet(data);
-      }
     };
-    fetchDotNet();
+
+    if (langId) fetchCodeByLangId();
   }, [langId]);
 
   const getProjectName = (id) => {
@@ -70,7 +65,7 @@ function DotNetComponent({ projects, langId }) {
                 whiteSpace: "pre", // Makes sure the white-space is preserved
               }}
             >
-              {data.code.split('\\n').map((line, index) => (
+              {data.code.split("\\n").map((line, index) => (
                 <pre key={index} data-prefix={index + 1}>
                   <code>{line}</code>
                 </pre>

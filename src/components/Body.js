@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import supabase from "../config/supabaseClient";
+import service from "../services";
 import "../App.css";
 
 import ReactComponent from "./CodePages/ReactComponent";
@@ -18,38 +18,29 @@ function Body() {
   const [selectedLangId, setSelectedLangId] = useState(null); // New state to hold the selected language Id
 
   useEffect(() => {
-    const getProjects = async () => {
-      const { data, error } = await supabase.from("projects").select();
-      if (error) {
-        console.error("Supabase error:", error);
-        setProject([]);
-      } else {
-        setProject(data);
-      }
+    const fetchProjects = async () => {
+      const projectsData = await service.getProjects();
+      setProject(projectsData);
     };
 
-    const getCodingLanguage = async () => {
-      const { data, error } = await supabase.from("codingLanguage").select();
-      if (error) {
-        console.error("Supabase error:", error);
-        setCodeLang([]);
-      } else {
-        const sortedData = data.sort((a, b) => {
-          const tierOrder = { Frontend: 1, "Middle/Backend": 2, Backend: 3 };
-          const tierA = tierOrder[a.Tier] || 4;
-          const tierB = tierOrder[b.Tier] || 4;
+    const fetchCodingLanguages = async () => {
+      const languagesData = await service.getCodingLanguage();
+      const sortedData = languagesData.sort((a, b) => {
+        const tierOrder = { Frontend: 1, "Middle/Backend": 2, Backend: 3 };
+        const tierA = tierOrder[a.Tier] || 4;
+        const tierB = tierOrder[b.Tier] || 4;
 
-          if (tierA === tierB) {
-            return a.langName.localeCompare(b.langName);
-          }
-          return tierA - tierB;
-        });
-        setCodeLang(sortedData);
-      }
+        if (tierA === tierB) {
+          return a.langName.localeCompare(b.langName);
+        }
+        return tierA - tierB;
+      });
+      setCodeLang(sortedData);
     };
 
-    getProjects();
-    getCodingLanguage();
+    // Call both functions
+    fetchProjects();
+    fetchCodingLanguages();
   }, []);
 
   // Updated renderComponent function to pass the selected language Id as a prop

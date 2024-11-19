@@ -1,27 +1,21 @@
 import { useState, useEffect } from "react";
-import supabase from "../../config/supabaseClient";
-
+import service from "../../services";
 
 function SqlComponent({ projects, langId }) {
   const [sql, setSql] = useState([]);
 
   useEffect(() => {
-    console.log("effect");
-    const fetchSql = async () => {
-      const { data, error } = await supabase
-        .from("codeSamples")
-        .select()
-        .eq("codeId", langId);
-      if (error) {
-        console.error("Supabase error:", error);
+    const fetchCodeByLangId = async () => {
+      try {
+        const data = await service.getCodeSamplesByLangId(langId);
+        setSql(data);
+      } catch (error) {
+        console.error("Error fetching code samples:", error);
         setSql([]);
       }
-      if (data) {
-        console.log("dotNet data:", data);
-        setSql(data);
-      }
     };
-    fetchSql();
+
+    if (langId) fetchCodeByLangId();
   }, [langId]);
 
   // const getProjectName = (id) => {
